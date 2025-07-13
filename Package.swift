@@ -1,4 +1,4 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -15,14 +15,18 @@ var package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
-        .package(name: "Bip39", url: "https://github.com/tesseract-one/Bip39.swift.git", from: "0.1.1"),
+        .package(url: "https://github.com/tesseract-one/Bip39.swift.git", from: "0.1.1"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.0.2"),
-        .package(path: "CardanoCore")
+        .package(url: "https://github.com/dchatzieleftheriou-bc/CardanoCore", branch: "main")
     ],
     targets: [
         .target(
             name: "Cardano",
-            dependencies: ["CardanoCore", "Bip39"]),
+            dependencies: [
+                "CardanoCore",
+                .product(name: "Bip39", package: "bip39.swift")
+            ]
+        ),
         .testTarget(
             name: "CardanoTests",
             dependencies: ["Cardano"])
