@@ -11,31 +11,18 @@ var package = Package(
     products: [
         .library(
             name: "Cardano",
-            targets: ["Cardano"]),
-        .library(
-            name: "CardanoCore",
-            targets: ["CardanoCore"])
+            targets: ["Cardano"])
     ],
     dependencies: [
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
         .package(name: "Bip39", url: "https://github.com/tesseract-one/Bip39.swift.git", from: "0.1.1"),
-        .package(url: "https://github.com/apple/swift-collections", from: "1.0.2")
+        .package(url: "https://github.com/apple/swift-collections", from: "1.0.2"),
+        .package(path: "CardanoCore")
     ],
     targets: [
         .target(
             name: "Cardano",
             dependencies: ["CardanoCore", "Bip39"]),
-        .target(
-            name: "CardanoCore",
-            dependencies: [
-                "CCardano",
-                "BigInt",
-                .product(name: "OrderedCollections", package: "swift-collections")
-            ],
-            path: "Sources/Core"),
-        .testTarget(
-            name: "CoreTests",
-            dependencies: ["CardanoCore"]),
         .testTarget(
             name: "CardanoTests",
             dependencies: ["Cardano"])
@@ -47,16 +34,7 @@ package.targets.append(
     .systemLibrary(name: "CCardano")
 )
 #else
-let ccardano: Target = useLocalBinary ?
-    .binaryTarget(
-        name: "CCardano",
-        path: "rust/binaries/CCardano.xcframework") :
-    .binaryTarget(
-        name: "CCardano",
-        url: "https://github.com/tesseract-one/Cardano.swift/releases/download/0.1.4/CCardano.binaries.zip",
-        checksum: "50fa4995483338bab59ae6abf6bbfe50f6e05507bbcf4128087b75d049b9590e")
 package.targets.append(contentsOf: [
-    ccardano,
     .target(
         name: "CardanoBlockfrost",
         dependencies: ["Cardano", "BlockfrostSwiftSDK"],
